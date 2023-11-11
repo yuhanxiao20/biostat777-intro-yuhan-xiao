@@ -1,0 +1,21 @@
+---
+title : "Yuhan Xiao"
+image : images/yuhanx.jpg
+about :
+  image-shape: round
+  links: 
+    - text: 'LinkedIn'
+      url: "https://www.linkedin.com/in/yuhanxiao20/"
+    - text: 'GitHub'
+      url: "https://github.com/yuhanxiao20"
+    - text: 'Email'
+      url: "mailto:yuhanxiao20@gmail.com"
+  template: trestles
+---
+
+:::{.column-body-outset}
+
+Hi everyone, my name is Yuhan. I'm a first-year ScM in Biostatistics student at Johns Hopkins University.
+
+:::
+

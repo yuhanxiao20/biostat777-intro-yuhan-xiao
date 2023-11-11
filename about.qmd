@@ -1,0 +1,18 @@
+---
+title: "About"
+---
+
+I'm a first-year [ScM in Biostatistics](https://publichealth.jhu.edu/academics/scm-dept-of-biostatistics) student at [Johns Hopkins Bloomberg School of Public Health](https://publichealth.jhu.edu/). My research interests include causal inference, precision medicine, and clinical trials.
+
+Originally from China, I moved to Michigan four years ago to study [Honors Mathematics](https://lsa.umich.edu/math/undergraduates/major-and-minor-programs/honors-mathematics.html) at the [University of Michigan](https://umich.edu/). After completing my bachelor's degree, I worked as a statistical programmer specializing in health policy at [Acumen, LLC](https://www.acumenllc.com/). It was during this time that I discovered my passion for data analysis and public health.
+
+Outside of school, I enjoy walking in nature, listening to music, and learning Spanish. One of my favorite TV shows is *Friends*.
+
+## Education
+
+B.S. in Honors Mathematics | University of Michigan, Ann Arbor <br>
+Pre-Health Sciences | University of Washington, Seattle  
+
+## Programming Experience
+
+R, Python, SAS, SQL <br>

@@ -1,0 +1,100 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Yuhan Xiao",
+    "section": "",
+    "text": "Hi everyone, my name is Yuhan. I’m a first-year ScM in Biostatistics student at Johns Hopkins University."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I’m a first-year ScM in Biostatistics student at Johns Hopkins Bloomberg School of Public Health. My research interests include causal inference, precision medicine, and clinical trials.\nOriginally from China, I moved to Michigan four years ago to study Honors Mathematics at the University of Michigan. After completing my bachelor’s degree, I worked as a statistical programmer specializing in health policy at Acumen, LLC. It was during this time that I discovered my passion for data analysis and public health.\nOutside of school, I enjoy walking in nature, listening to music, and learning Spanish. One of my favorite TV shows is Friends."
+  },
+  {
+    "objectID": "index.html#about",
+    "href": "index.html#about",
+    "title": "Yuhan Xiao",
+    "section": "",
+    "text": "Hi everyone, my name is Yuhan. I’m a first-year ScM in Biostatistics student at Johns Hopkins Bloomberg School of Public Health. My research interests include causal inference, precision medicine, and clinical trials.\nOriginally from China, I moved to Michigan four years ago to study Honors Mathematics at the University of Michigan. After completing my bachelor’s degree, I worked as a statistical programmer specializing in health policy at Acumen, LLC. It was during this time that I discovered my passion for data analysis and public health.\nOutside of school, I enjoy walking in nature, listening to music, and learning Spanish. One of my favorite TV shows is Friends."
+  },
+  {
+    "objectID": "index.html#education",
+    "href": "index.html#education",
+    "title": "Yuhan Xiao",
+    "section": "",
+    "text": "B.S. in Honors Mathematics | University of Michigan, Ann Arbor  Pre-Health Sciences | University of Washington, Seattle"
+  },
+  {
+    "objectID": "index.html#programming-experience",
+    "href": "index.html#programming-experience",
+    "title": "Yuhan Xiao",
+    "section": "",
+    "text": "R, Python, SAS, SQL"
+  },
+  {
+    "objectID": "about.html#about",
+    "href": "about.html#about",
+    "title": "About",
+    "section": "",
+    "text": "Hi everyone, my name is Yuhan. I’m a first-year ScM in Biostatistics student at Johns Hopkins Bloomberg School of Public Health. My research interests include causal inference, precision medicine, and clinical trials.\nOriginally from China, I moved to Michigan four years ago to study Honors Mathematics at the University of Michigan. After completing my bachelor’s degree, I worked as a statistical programmer specializing in health policy at Acumen, LLC. It was during this time that I discovered my passion for data analysis and public health.\nOutside of school, I enjoy walking in nature, listening to music, and learning Spanish. One of my favorite TV shows is Friends."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "About",
+    "section": "Education",
+    "text": "Education\nB.S. in Honors Mathematics | University of Michigan, Ann Arbor  Pre-Health Sciences | University of Washington, Seattle"
+  },
+  {
+    "objectID": "about.html#programming-experience",
+    "href": "about.html#programming-experience",
+    "title": "About",
+    "section": "Programming Experience",
+    "text": "Programming Experience\nR, Python, SAS, SQL"
+  },
+  {
+    "objectID": "analysis.html",
+    "href": "analysis.html",
+    "title": "Example analysis",
+    "section": "",
+    "text": "In this page, I will analyze a dataset about counts of baby names in a given time period.\n\nQuestion: What are the most popular baby names in year 2000? What are the most popular baby names between 1995 to 2004? What is the trend of the counts of baby names around 2000?\nAudience: The intended audience for this analysis is anyone who’s interested in popularity of baby names.\nDataset: I obtained the original dataset from tidytuesday (Community 2023).\nData dictionary: I referred to this data dictionary from tidytuesday."
+  },
+  {
+    "objectID": "analysis.html#background",
+    "href": "analysis.html#background",
+    "title": "Example analysis",
+    "section": "",
+    "text": "Code\nlibrary(here)\nlibrary(tidyverse)\nlibrary(lubridate)\nlibrary(ggplot2)\nlibrary(tidytext)\nlibrary(wordcloud)\n\n\n\n\n\n\nCode\nrds_files &lt;- c(\"babyname.RDS\")\n## Check whether we have input files\nif (any(!file.exists(here(\"data\", rds_files)))) {\n    ## If we don't, then download the data\n    baby_names &lt;- readr::read_csv(\"https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-22/babynames.csv\")\n\n    ## Then save the data objects to RDS files\n    saveRDS(baby_names, file = here(\"data\", \"baby_names.RDS\"))\n}\n\n# load the datasets\nbaby_names &lt;- readRDS(here(\"data\", \"baby_names.RDS\"))\n\n\n\n\n\n\n\nCode\n# select top 10 baby names from each year by sex\nbaby_names_wrangled &lt;- baby_names %&gt;%\n  select(year, name, sex, n) %&gt;%\n  filter(year &gt;= 1995 & year &lt; 2005) %&gt;%\n  mutate(count = n/1000) %&gt;%\n  filter(count &gt; 10) %&gt;%\n  arrange(desc(count)) %&gt;%\n  group_by(sex, year) %&gt;%\n  slice_head(n = 10)\n\n# calculate the total number of counts for each baby name\nbaby_names_sum &lt;- baby_names_wrangled %&gt;%\n  group_by(name, sex) %&gt;%\n  summarise(\n    total_count = sum(count)\n  ) %&gt;%\n  arrange(desc(total_count)) \n\n# count the name of times each baby name makes to the top 10 list\nbaby_names_freq &lt;- baby_names_wrangled %&gt;%\n  group_by(name) %&gt;%\n  mutate(nyear = n()) \n\n\n\n\n\n\n\nCode\nbaby_names_wrangled %&gt;%\n  filter(year==2000) %&gt;%\n  ggplot(aes(count, fct_reorder(.f = name, .x = count), fill = sex)) +\n  facet_wrap(~sex, nrow=2, scales=\"free_y\") +\n  geom_bar(stat=\"identity\", na.rm=TRUE) +\n  scale_fill_manual(values = c(\"#FAAB18\", \"#1380A1\")) +\n  labs(title = \"The Top 10 Most Popular Baby Names by Sex in 2000\", subtitle = str_wrap(\"In Year 2000, the most popular girl baby name is Emily. The most popular boy baby name is Jacob.\", 60), caption = \"Yuhan Xiao\", x = \"count (in thousands)\", y = \"baby name\", fill = \"sex\") +\n    theme_minimal(base_size = 14) +\n    theme(plot.title = element_text(hjust = 0.5, vjust = 1, size = 15), \n          plot.subtitle = element_text(hjust = 0.5),\n          axis.text.x = element_text(angle = 0, hjust = 1),\n          plot.background = element_rect(fill = \"white\"),\n          text = element_text(family = \"Times\"))\n\n\n\n\n\n\n\nCode\nbaby_names_sum %&gt;%\n  head(10) %&gt;%\n  ggplot(aes(total_count, fct_reorder(.f = name, .x = total_count), fill = fct_reorder2(sex, total_count, name))) +\n  geom_bar(stat=\"identity\") +\n  scale_fill_manual(values = c(\"#1380A1\", \"#FAAB18\")) +\n  labs(title = \"The Top 10 Most Popular Baby Names in 1995-2004\", subtitle = str_wrap(\"There are more boy baby names than girl baby names overall.\", 60), caption = \"Yuhan Xiao\", x = \"count (in thousands)\", y = \"baby name\", fill = \"sex\") +\n    theme_minimal(base_size = 14) +\n    theme(plot.title = element_text(hjust = 0.5, vjust = 1, size = 15), \n          plot.subtitle = element_text(hjust = 0.5),\n          axis.text.x = element_text(angle = 0, hjust = 1),\n          plot.background = element_rect(fill = \"white\"),\n          text = element_text(family = \"Times\"))\n\n\n\n\n\n\n\nCode\nbaby_names_freq %&gt;%\n  filter(nyear &gt;= 10) %&gt;%\n  ggplot(aes(year, count, color=name)) +\n  facet_wrap(~name, nrow=3, scale=\"fixed\") +\n  geom_point() +\n  geom_line() + \n  labs(title = \"The Total Count of Consistently Popular Baby Names in 1995-2004\", subtitle = str_wrap(\"There are 9 baby names that make it on the top 10 baby name list every year in 1995-2004. Most names became less popular as year passed. Emily is consistently popular in every year.\", 60), caption = \"Yuhan Xiao\", x = \"year\", y = \"count (in thousands)\") +\n    theme_minimal(base_size = 14) +\n    theme(plot.title = element_text(hjust = 0.5, vjust = 1, size = 15), \n          plot.subtitle = element_text(hjust = 0.5),\n          axis.text.x = element_text(angle = 0, hjust = 1),\n          plot.background = element_rect(fill = \"white\"),\n          text = element_text(family = \"Times\"))\n\n\n\n\n\n\n\n\n\ndplyr: select(), filter(), mutate(), arrange(), group_by(),slice_head(), summarise()\nggplot2: geom_bar(), geom_point(), geom_line()"
+  },
+  {
+    "objectID": "analysis.html#data-analysis",
+    "href": "analysis.html#data-analysis",
+    "title": "Example analysis",
+    "section": "Data Analysis",
+    "text": "Data Analysis\n\nStep 1: load packages\n\n\nCode\nlibrary(here)\nlibrary(tidyverse)\nlibrary(ggplot2)\n\n\n\n\nStep 2: load data\n\n\nCode\nrds_files &lt;- c(\"babyname.RDS\")\n## Check whether we have input files\nif (any(!file.exists(here(\"data\", rds_files)))) {\n    ## If we don't, then download the data\n    baby_names &lt;- readr::read_csv(\"https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-22/babynames.csv\")\n\n    ## Then save the data objects to RDS files\n    saveRDS(baby_names, file = here(\"data\", \"baby_names.RDS\"))\n}\n\n# load the datasets\nbaby_names &lt;- readRDS(here(\"data\", \"baby_names.RDS\"))\n\n\n\n\nStep 3: data wrangling\n\n\nCode\n# select top 10 baby names from each year by sex\nbaby_names_wrangled &lt;- baby_names %&gt;%\n  select(year, name, sex, n) %&gt;%\n  filter(year &gt;= 1995 & year &lt; 2005) %&gt;%\n  mutate(count = n/1000) %&gt;%\n  filter(count &gt; 10) %&gt;%\n  arrange(desc(count)) %&gt;%\n  group_by(sex, year) %&gt;%\n  slice_head(n = 10)\n\n# calculate the total number of counts for each baby name\nbaby_names_sum &lt;- baby_names_wrangled %&gt;%\n  group_by(name, sex) %&gt;%\n  summarise(\n    total_count = sum(count)\n  ) %&gt;%\n  arrange(desc(total_count)) \n\n# count the number of times each baby name makes to the top 10 list\nbaby_names_freq &lt;- baby_names_wrangled %&gt;%\n  group_by(name) %&gt;%\n  mutate(nyear = n()) \n\n\n\n\nStep 4: data visualization\n\n\nCode\nbaby_names_wrangled %&gt;%\n  filter(year==2000) %&gt;%\n  ggplot(aes(count, fct_reorder(.f = name, .x = count), fill = sex)) +\n  facet_wrap(~sex, nrow=2, scales=\"free_y\") +\n  geom_bar(stat=\"identity\", na.rm=TRUE) +\n  scale_fill_manual(values = c(\"#FAAB18\", \"#1380A1\")) +\n  labs(title = \"The Top 10 Most Popular Baby Names by Sex in 2000\", subtitle = str_wrap(\"In Year 2000, the most popular girl baby name is Emily. The most popular boy baby name is Jacob.\", 60), caption = \"Yuhan Xiao\", x = \"count (in thousands)\", y = \"baby name\", fill = \"sex\") +\n    theme_minimal(base_size = 14) +\n    theme(plot.title = element_text(hjust = 0.5, vjust = 1, size = 15), \n          plot.subtitle = element_text(hjust = 0.5),\n          axis.text.x = element_text(angle = 0, hjust = 1),\n          plot.background = element_rect(fill = \"white\"),\n          text = element_text(family = \"Times\"))\n\n\n\n\n\n\n\n\n\n\n\nComparison with Data from 2022\n\n\n\n\n\nCode\n# select top 10 baby names by sex in year 2000\nknitr::kable(\n  baby_names_wrangled %&gt;%\n  filter(year==2000) %&gt;%\n  group_by(sex) %&gt;%\n  mutate(Rank = row_number()) %&gt;%\n  select(Rank, name, sex) %&gt;%\n  pivot_wider(names_from=sex, values_from=name) %&gt;%\n  rename(Female_name=F, Male_name=M)\n)\n\n\n\nFrom the above data analysis, I found the top 10 most popular baby names by sex in 2000, as shown in the margin.\nFrom Social Security, I obtained the following table of the top 10 most popular baby names by sex in 2022.\n\n\n\nSource: (Social Security Administration 2023)\n\n\nAs we can see, there is no overlapping between two tables. The popularity of baby names has drastically changed after about two decades.\n\n\n\n\n\n\nRank\nFemale_name\nMale_name\n\n\n\n\n1\nEmily\nJacob\n\n\n2\nHannah\nMichael\n\n\n3\nMadison\nMatthew\n\n\n4\nAshley\nJoshua\n\n\n5\nSarah\nChristopher\n\n\n6\nAlexis\nNicholas\n\n\n7\nSamantha\nAndrew\n\n\n8\nJessica\nJoseph\n\n\n9\nElizabeth\nDaniel\n\n\n10\nTaylor\nTyler\n\n\n\n\n\nCode\nbaby_names_sum %&gt;%\n  head(10) %&gt;%\n  ggplot(aes(total_count, fct_reorder(.f = name, .x = total_count), fill = fct_reorder2(sex, total_count, name))) +\n  geom_bar(stat=\"identity\") +\n  scale_fill_manual(values = c(\"#1380A1\", \"#FAAB18\")) +\n  labs(title = \"The Top 10 Most Popular Baby Names in 1995-2004\", subtitle = str_wrap(\"There are more counts of boy baby names than girl baby names overall.\", 60), caption = \"Yuhan Xiao\", x = \"count (in thousands)\", y = \"baby name\", fill = \"sex\") +\n    theme_minimal(base_size = 14) +\n    theme(plot.title = element_text(hjust = 0.5, vjust = 1, size = 15), \n          plot.subtitle = element_text(hjust = 0.5),\n          axis.text.x = element_text(angle = 0, hjust = 1),\n          plot.background = element_rect(fill = \"white\"),\n          text = element_text(family = \"Times\"))\n\n\n\n\n\n\n\n\n\n\n\nComparison with Sex Ratio Trend\n\n\n\n\n\n\nSource: (T.J. Mathews, M.S., and Brady E. Hamilton, Ph.D., Division of Vital Statistics 2005)\n\n\nFrom the sex ratio trend above, we can see that overall there were more male births than female births. It might partially explain the difference between the counts of boy baby names and girl baby names.\nIn addition, there are more girl baby names than boy baby names as the table shown in the margin. It means boy are more likely to share a common name than girls.\n\n\nCode\n#count the number of distinct baby names by sex\nknitr::kable(\n  baby_names %&gt;% \n    distinct(name, sex) %&gt;%\n    group_by(sex) %&gt;%\n    summarise(\n      n_names = n()\n    ) \n)\n\n\n\n\n\n\n\n\n\nsex\nn_names\n\n\n\n\nF\n67046\n\n\nM\n40927\n\n\n\n\n\nCode\nbaby_names_freq %&gt;%\n  filter(nyear &gt;= 10) %&gt;%\n  ggplot(aes(year, count, color=name)) +\n  facet_wrap(~name, nrow=3, scale=\"fixed\") +\n  geom_point() +\n  geom_line() + \n  labs(title = \"The Total Count of Consistently Popular Baby Names in 1995-2004\", subtitle = str_wrap(\"Nine baby names consistently made it on the top 10 list every year from 1995 to 2004.\", 60), caption = \"Yuhan Xiao\", x = \"year\", y = \"count (in thousands)\") +\n    theme_minimal(base_size = 14) +\n    theme(plot.title = element_text(hjust = 0.5, vjust = 1, size = 15), \n          plot.subtitle = element_text(hjust = 0.5),\n          axis.text.x = element_text(angle = 45, hjust = 1),\n          plot.background = element_rect(fill = \"white\"),\n          text = element_text(family = \"Times\"))\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhile most names became less popular as the years passed, Emily remained consistently favored throughout this time period. It is historically associated with profound meanings. Famous individuals named Emily, coupled with its prevalence in pop culture, have likely influenced parents to choose the same name for their own children (Betsy Shaw, n.d.)."
+  },
+  {
+    "objectID": "analysis.html#overview",
+    "href": "analysis.html#overview",
+    "title": "Example analysis",
+    "section": "",
+    "text": "In this page, I will analyze a dataset about counts of baby names in a given time period.\n\nQuestion: What are the most popular baby names in year 2000? What are the most popular baby names between 1995 to 2004? What is the trend of the counts of baby names around 2000?\nAudience: The intended audience for this analysis is anyone who’s interested in popularity of baby names.\nDataset: I obtained the original dataset from tidytuesday (Community 2023).\nData dictionary: I referred to this data dictionary from tidytuesday."
+  },
+  {
+    "objectID": "analysis.html#summary",
+    "href": "analysis.html#summary",
+    "title": "Example analysis",
+    "section": "Summary",
+    "text": "Summary\nThe overall counts of popular boy baby names exceeded those of popular girl baby names between 1995 and 2004. It could potentially be explained by the higher male birth rates and a more diverse pool of girl baby names. With the exception of Emily, most names experienced a decline in popularity during this time period. Over time, new names have become more favored by parents and replaced old popular names after a few years. To some extent, popular baby names might capture the then-current popular culture and celebrity influence."
+  },
+  {
+    "objectID": "analysis.html#functions",
+    "href": "analysis.html#functions",
+    "title": "Example analysis",
+    "section": "Functions",
+    "text": "Functions\n\ntidyr: pivot_wider()\ndplyr: select(), filter(), mutate(), arrange(), group_by(),slice_head(), summarise(), rename()\nggplot2: geom_bar(), geom_point(), geom_line()"
+  }
+]
