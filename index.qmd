@@ -13,9 +13,6 @@ about :
   template: trestles
 ---
 
-:::{.column-body-outset}
-
+::: column-body-outset
 Hi everyone, my name is Yuhan. I'm a first-year ScM in Biostatistics student at Johns Hopkins University.
-
 :::
-
